@@ -1,0 +1,57 @@
+clear;
+clc; 
+
+%up load picture
+tiff = imread('pic.tiff');
+png = imread('pic.png');
+jpg = imread('pic.jpg');
+gif = imread('pic.gif');
+bmp = imread('pic.bmp');
+
+ %Histrogram
+ for a=1:256
+     jpgHis(a) = 0;
+ end
+ for u=1:1568
+     for v=1:1044
+         count = jpg(u,v);
+         if count==255
+             jpgHis(256)=jpgHis(256)+1;             
+         else
+             jpgHis(count+1)=jpgHis(count+1)+1;
+         end
+     end
+ end
+
+%subplot(3,2,1); plot(tiffHis);
+%subplot(3,2,2); plot(pngHis);
+%subplot(3,2,3); plot(jpgHis);
+%subplot(3,2,4); plot(gifHis);
+%subplot(3,2,5); plot(bmpHis);
+
+ %Comulative
+ com(1) = jpgHis(1);
+ for i = 2:256
+     com(i) = com(i-1)+jpgHis(i);
+ end
+ 
+ %Equalization
+ cdfmin = min(com);
+ MxN = 1568*1044;
+ for j = 1:256;
+     eq(j) = round(((com(j)-cdfmin)/(MxN-cdfmin))*255);
+ end
+ 
+ %convert to image
+ newim = uint8(zeros(1568,1044));
+ for row=1:1568
+     for c=1:1044
+         value = jpg(row,c);
+         if value==255
+             jpgHis(256)=jpgHis(256)+1;             
+         else
+             jpgHis(value+1)=jpgHis(value+1)+1;
+         end
+     end
+ end
+ 
